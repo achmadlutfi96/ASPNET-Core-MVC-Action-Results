@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<div>
+    <table id="tblProducts" class="tblProducts">
+        <thead>
+            <tr>
+                <th align="left" class="productth">ProductID</th>
+                <th align="left" class="productth">ProductName</th>
+                <th align="left" class="productth">Descrtption</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+<script>
+    // Wait until the document is fully loaded
+    $(document).ready(function () {
+        // Remove all rows from the table body with id 'tblProducts'
+        $("#tblProducts tbody tr").remove();
+
+        // Define the data to be sent to the server
+        var rawdata = { 'Category': 'Electronics' };
+
+        // Make an AJAX request to the server
+        $.ajax({
+            type: "GET", // HTTP method to be used for the request
+            url: "/Home/Details/", // URL to which the request is sent
+            data: rawdata, // Data to be sent to the server
+            dataType: 'json', // Expected data type of the server response
+
+            // Function to be called if the request succeeds
+            success: function (data) {
+                var items = ''; // Initialize an empty string to accumulate the HTML
+
+                // Iterate over each item in the received data
+                $.each(data, function (i, item) {
+                    // Construct a table row with the item data
+                    var rows = "<tr>"
+                        + "<td class='prtoducttd'>" + item.Id + "</td>"
+                        + "<td class='prtoducttd'>" + item.Name + "</td>"
+                        + "<td class='prtoducttd'>" + item.Description + "</td>"
+                        + "</tr>";
+
+                    // Append the constructed row to the table body with id 'tblProducts'
+                    $('#tblProducts tbody').append(rows);
+                });
+            },
+
+            // Function to be called if the request fails
+            error: function (errorData) {
+                // Alert the error response
+                alert(errorData);
+
+                // Parse the error response JSON
+                var ErrorResponse = jQuery.parseJSON(errorData.responseText);
+
+                // Alert the details of the error
+                alert("Message: " + ErrorResponse.Message);
+                alert("StackTrace: " + ErrorResponse.StackTrace);
+                alert("ExceptionType: " + ErrorResponse.ExceptionType);
+            }
+        });
+    });
+</script>

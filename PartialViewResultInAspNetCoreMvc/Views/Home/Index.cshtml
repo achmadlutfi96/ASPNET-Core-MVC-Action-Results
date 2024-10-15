@@ -1,0 +1,43 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="someDiv" class="text-left">
+</div>
+
+<!-- Include the jQuery library from Google's hosted libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+<script>
+    // Ensure the DOM is fully loaded before executing the script
+    $(document).ready(function () {
+        // Define an object 'rawdata' with a property 'ProductId' set to '10'
+        var rawdata = { 'ProductId': '10' };
+
+        // Make an AJAX request
+        $.ajax({
+            // Specify the request type as GET
+            type: "GET",
+            // Specify the URL to which the request is sent
+            url: "/Home/Details/",
+            // Include the data to be sent with the request
+            data: rawdata,
+            // Define a callback function to handle a successful response
+            success: function (viewHTML) {
+                // Find the HTML element with the ID 'someDiv' and set its inner HTML to the response from the server
+                $("#someDiv").html(viewHTML);
+            },
+            // Define a callback function to handle an error response
+            error: function (errorData) {
+                // Call a function 'onError' with the error data as an argument
+                onError(errorData);
+            }
+        });
+    });
+    // Define the onError function to handle error responses
+    function onError(errorData) {
+        // Display the error data in an alert box
+        alert("An error occurred: " + errorData.responseText);
+    }
+</script>
